@@ -9,6 +9,7 @@
 #import <Masonry/Masonry.h>
 #import "GHRepository.h"
 #import "GHApiClient.h"
+#import "GHLoadingView.h"
 
 static const struct {
     CGFloat spacing;
@@ -25,7 +26,7 @@ static NSString * const kCellIdentifier = @"RepositoryCell";
 @property (nonatomic, strong) UISearchBar *searchBar;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSArray<GHRepository *> *repositories;
-@property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
+@property (nonatomic, strong) GHLoadingView *loadingView;
 
 @end
 
@@ -35,6 +36,7 @@ static NSString * const kCellIdentifier = @"RepositoryCell";
 - (UISearchBar *)searchBar {
     if (!_searchBar) {
         _searchBar = [[UISearchBar alloc] init];
+        _searchBar.searchBarStyle = UISearchBarStyleDefault;
         _searchBar.placeholder = @"Search repositories...";
         _searchBar.delegate = self;
     }
@@ -51,12 +53,11 @@ static NSString * const kCellIdentifier = @"RepositoryCell";
     return _tableView;
 }
 
--(UIActivityIndicatorView *)activityIndicator {
-    if (!_activityIndicator) {
-        _activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle: UIActivityIndicatorViewStyleLarge];
-        _activityIndicator.hidesWhenStopped = true;
+-(GHLoadingView *)loadingView {
+    if (!_loadingView) {
+        _loadingView = [[GHLoadingView alloc] init];
     }
-    return _activityIndicator;
+    return _loadingView;
 }
 
 #pragma mark - LIFECYCLE
@@ -68,11 +69,11 @@ static NSString * const kCellIdentifier = @"RepositoryCell";
 
 #pragma mark - UI SETUP
 - (void)setupUI {
-    
+    self.view.backgroundColor = [UIColor systemBackgroundColor];
     [self.view addSubview:self.searchBar];
     [self.searchBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.view.mas_safeAreaLayoutGuideTop);
-        make.leading.trailing.equalTo(self.view).inset(Constants.padding);
+        make.leading.trailing.equalTo(self.view);
     }];
     
     [self.view addSubview:self.tableView];
@@ -81,9 +82,9 @@ static NSString * const kCellIdentifier = @"RepositoryCell";
         make.leading.trailing.bottom.equalTo(self.view);
     }];
     
-    [self.tableView addSubview: self.activityIndicator];
-    [self.activityIndicator mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.center.equalTo(self.tableView);
+    [self.view addSubview: self.loadingView];
+    [self.loadingView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view);
     }];
 }
 
@@ -99,19 +100,18 @@ static NSString * const kCellIdentifier = @"RepositoryCell";
 #pragma mark - UISEARCH BAR DELEGATE
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
     [searchBar resignFirstResponder];
-    [self.activityIndicator startAnimating];
-    [[GHApiClient shared] searchRepositories:searchBar.text
-                                  completion:^(NSArray *repositories, NSError *error) {
+    [self.loadingView showOnView: self.view];
+    [[GHApiClient shared] searchRepositories: searchBar.text completion:^(NSArray *repositories, NSError *error) {
         if (error) {
             NSLog(@"Error: %@", error);
-            [self.activityIndicator stopAnimating];
+            [self.loadingView hide];
             return;
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
             self.repositories = repositories;
             [self.tableView reloadData];
-            [self.activityIndicator stopAnimating];
+            [self.loadingView hide];
         });
     }];
 }
@@ -122,8 +122,7 @@ static NSString * const kCellIdentifier = @"RepositoryCell";
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdentifier
-                                                            forIndexPath:indexPath];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdentifier forIndexPath:indexPath];
     GHRepository *repo = self.repositories[indexPath.row];
     cell.textLabel.text = repo.name;
     cell.detailTextLabel.text = repo.repoDescription;
@@ -132,7 +131,7 @@ static NSString * const kCellIdentifier = @"RepositoryCell";
 
 #pragma mark - UI TABLE VIEW DELEGATE
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [tableView deselectRowAtIndexPath: indexPath animated: YES];
     GHRepository *repo = self.repositories[indexPath.row];
     NSLog(@"Selected: %@", repo.fullName);
 }
