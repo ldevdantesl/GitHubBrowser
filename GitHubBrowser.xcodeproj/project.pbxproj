@@ -14,7 +14,7 @@
 		DAFC9F242F6F9815001F2E67 /* Exceptions for "GitHubBrowser" folder in "GitHubBrowser" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				Resources/Info.plist,
 			);
 			target = DAFC9F0C2F6F9813001F2E67 /* GitHubBrowser */;
 		};
@@ -146,7 +146,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = UJQW6TGS7Z;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = GitHubBrowser/Info.plist;
+				INFOPLIST_FILE = GitHubBrowser/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -174,7 +174,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = UJQW6TGS7Z;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = GitHubBrowser/Info.plist;
+				INFOPLIST_FILE = GitHubBrowser/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
