@@ -6,7 +6,7 @@
 //
 
 #import "SceneDelegate.h"
-#import "ViewController.h"
+#import "MainViewController.h"
 
 @interface SceneDelegate ()
 
@@ -19,7 +19,7 @@
     UIWindowScene *windowScene = (UIWindowScene *)scene;
     self.window = [[UIWindow alloc] initWithWindowScene:windowScene];
     
-    ViewController *rootVC = [[ViewController alloc] init];
+    MainViewController *rootVC = [[MainViewController alloc] init];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:rootVC];
     
     self.window.rootViewController = navController;
