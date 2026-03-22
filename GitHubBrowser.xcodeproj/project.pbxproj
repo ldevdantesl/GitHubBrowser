@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B53A5E9FD80AED6AC16E635F /* Pods_GitHubBrowser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9633620BABABDF9E751619E0 /* Pods_GitHubBrowser.framework */; };
+		6DC448BE310092183A10A787 /* libPods-GitHubBrowser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D4147B88197A324E55AF0CAC /* libPods-GitHubBrowser.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		8F919868C494B3C1D1038794 /* Pods-GitHubBrowser.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GitHubBrowser.debug.xcconfig"; path = "Target Support Files/Pods-GitHubBrowser/Pods-GitHubBrowser.debug.xcconfig"; sourceTree = "<group>"; };
-		9633620BABABDF9E751619E0 /* Pods_GitHubBrowser.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GitHubBrowser.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C84E53C784B2E856609C3259 /* Pods-GitHubBrowser.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GitHubBrowser.release.xcconfig"; path = "Target Support Files/Pods-GitHubBrowser/Pods-GitHubBrowser.release.xcconfig"; sourceTree = "<group>"; };
+		D4147B88197A324E55AF0CAC /* libPods-GitHubBrowser.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GitHubBrowser.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAFC9F0D2F6F9813001F2E67 /* GitHubBrowser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GitHubBrowser.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -43,7 +43,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B53A5E9FD80AED6AC16E635F /* Pods_GitHubBrowser.framework in Frameworks */,
+				6DC448BE310092183A10A787 /* libPods-GitHubBrowser.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -53,7 +53,7 @@
 		222323185681DF07E00D5EB2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				9633620BABABDF9E751619E0 /* Pods_GitHubBrowser.framework */,
+				D4147B88197A324E55AF0CAC /* libPods-GitHubBrowser.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -64,7 +64,6 @@
 				8F919868C494B3C1D1038794 /* Pods-GitHubBrowser.debug.xcconfig */,
 				C84E53C784B2E856609C3259 /* Pods-GitHubBrowser.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -97,7 +96,6 @@
 				DAFC9F092F6F9813001F2E67 /* Sources */,
 				DAFC9F0A2F6F9813001F2E67 /* Frameworks */,
 				DAFC9F0B2F6F9813001F2E67 /* Resources */,
-				2691F73FD25E79096AED50EF /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -155,23 +153,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		2691F73FD25E79096AED50EF /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-GitHubBrowser/Pods-GitHubBrowser-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-GitHubBrowser/Pods-GitHubBrowser-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-GitHubBrowser/Pods-GitHubBrowser-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		65384B5FDA78AE44A4226C1E /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
