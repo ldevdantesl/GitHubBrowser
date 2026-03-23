@@ -10,6 +10,9 @@
 #import "GHRepository.h"
 #import "GHApiClient.h"
 #import "GHLoadingView.h"
+#import "RepositoryCell.h"
+#import "NotFoundCell.h"
+#import "UICollectionViewCell+Extensions.h"
 
 static const struct {
     CGFloat spacing;
@@ -21,10 +24,11 @@ static const struct {
 
 static NSString * const kCellIdentifier = @"RepositoryCell";
 
-@interface MainViewController () <UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource>
+@interface MainViewController () <UISearchBarDelegate, UICollectionViewDataSource>
 
 @property (nonatomic, strong) UISearchBar *searchBar;
-@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, assign) BOOL isSearching;
+@property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSArray<GHRepository *> *repositories;
 @property (nonatomic, strong) GHLoadingView *loadingView;
 
@@ -43,14 +47,17 @@ static NSString * const kCellIdentifier = @"RepositoryCell";
     return _searchBar;
 }
 
-- (UITableView *)tableView {
-    if (!_tableView) {
-        _tableView = [[UITableView alloc] init];
-        _tableView.delegate = self;
-        _tableView.dataSource = self;
-        [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier: kCellIdentifier];
+- (UICollectionView *)collectionView {
+    if (!_collectionView) {
+        UICollectionViewCompositionalLayout *layout = [self createLayout];
+        
+        _collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
+        _collectionView.dataSource = self;
+        _collectionView.backgroundColor = [UIColor clearColor];
+        [_collectionView registerClass:[RepositoryCell class] forCellWithReuseIdentifier:[RepositoryCell cellIdentifier]];
+        [_collectionView registerClass:[NotFoundCell class] forCellWithReuseIdentifier:[NotFoundCell cellIdentifier]];
     }
-    return _tableView;
+    return _collectionView;
 }
 
 -(GHLoadingView *)loadingView {
@@ -76,8 +83,8 @@ static NSString * const kCellIdentifier = @"RepositoryCell";
         make.leading.trailing.equalTo(self.view);
     }];
     
-    [self.view addSubview:self.tableView];
-    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.view addSubview:self.collectionView];
+    [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.searchBar.mas_bottom).offset(Constants.spacing);
         make.leading.trailing.bottom.equalTo(self.view);
     }];
@@ -88,8 +95,26 @@ static NSString * const kCellIdentifier = @"RepositoryCell";
     }];
 }
 
-#pragma mark - CONFIG
+- (UICollectionViewCompositionalLayout *)createLayout {
+    NSCollectionLayoutSize *itemSize = [
+        NSCollectionLayoutSize sizeWithWidthDimension:[NSCollectionLayoutDimension fractionalWidthDimension:1.0]
+            heightDimension:[NSCollectionLayoutDimension estimatedDimension:60]];
+    
+    NSCollectionLayoutItem *item = [NSCollectionLayoutItem itemWithLayoutSize:itemSize];
+    
+    NSCollectionLayoutSize *groupSize = [NSCollectionLayoutSize sizeWithWidthDimension:[NSCollectionLayoutDimension fractionalWidthDimension:1.0]
+                                                                       heightDimension:[NSCollectionLayoutDimension estimatedDimension:60]];
+    
+    NSCollectionLayoutGroup *group = [NSCollectionLayoutGroup verticalGroupWithLayoutSize:groupSize subitems:@[item]];
+    
+    NSCollectionLayoutSection *section = [NSCollectionLayoutSection sectionWithGroup:group];
+    section.interGroupSpacing = 10;
+    section.contentInsets = NSDirectionalEdgeInsetsMake(16, 16, 16, 16);
+    
+    return [[UICollectionViewCompositionalLayout alloc] initWithSection:section];
+}
 
+#pragma mark - CONFIG
 -(void) initialSetup {
     self.title = @"GitHub Repos";
     self.navigationController.navigationBar.prefersLargeTitles = YES;
@@ -102,6 +127,7 @@ static NSString * const kCellIdentifier = @"RepositoryCell";
     [searchBar resignFirstResponder];
     [self.loadingView showOnView: self.view];
     [[GHApiClient shared] searchRepositories: searchBar.text completion:^(NSArray *repositories, NSError *error) {
+        self.isSearching = true;
         if (error) {
             NSLog(@"Error: %@", error);
             [self.loadingView hide];
@@ -110,30 +136,29 @@ static NSString * const kCellIdentifier = @"RepositoryCell";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             self.repositories = repositories;
-            [self.tableView reloadData];
+            [self.collectionView reloadData];
             [self.loadingView hide];
         });
     }];
 }
 
-#pragma mark - UI TABLE VIEW DATA SOURCE
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.repositories.count;
+#pragma mark - UI COLLECTION VIEW DATA SOURCE
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    return self.repositories.count > 0 ? self.repositories.count : 1;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdentifier forIndexPath:indexPath];
-    GHRepository *repo = self.repositories[indexPath.row];
-    cell.textLabel.text = repo.name;
-    cell.detailTextLabel.text = repo.repoDescription;
+- (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (self.repositories.count > 0) {
+        GHRepository *repo = self.repositories[indexPath.item];
+        RepositoryCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[RepositoryCell cellIdentifier] forIndexPath:indexPath];
+        [cell configureWithName:repo.name];
+        return cell;
+    }
+    
+    NotFoundCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[NotFoundCell cellIdentifier] forIndexPath:indexPath];
+    [cell configureForInitialPresentation:!self.isSearching];
     return cell;
-}
-
-#pragma mark - UI TABLE VIEW DELEGATE
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath: indexPath animated: YES];
-    GHRepository *repo = self.repositories[indexPath.row];
-    NSLog(@"Selected: %@", repo.fullName);
 }
 
 @end

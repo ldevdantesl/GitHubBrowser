@@ -13,4 +13,12 @@
     return [UIImage imageNamed:@"AppLogo"];
 }
 
++(UIImage *)repoNotFoundImage {
+    return [UIImage imageNamed:@"RepoNotFoundImage"];
+}
+
++ (UIImage *)searchForRepoImage {
+    return [UIImage imageNamed:@"SearchForRepoImage"];
+}
+
 @end
