@@ -2,6 +2,13 @@
 
 An Objective-C iOS app that searches GitHub repositories using the GitHub REST API. Built as a showcase project to demonstrate proficiency in Objective-C and UIKit.
 
+## Screenshots
+<img width="200" height="2532" alt="IMG_8842" src="https://github.com/user-attachments/assets/3a2396af-dd65-47b0-9349-3c300a99bff7" />
+<img width="200" height="2532" alt="IMG_8840" src="https://github.com/user-attachments/assets/7e9468f9-6bb8-4ec6-8e2d-9ace2783c5ff" />
+<img width="200" height="2532" alt="IMG_8844" src="https://github.com/user-attachments/assets/cf9c40c8-5b21-4a1a-90c7-c2dde5d33fd6" />
+<img width="200" height="2532" alt="IMG_8841" src="https://github.com/user-attachments/assets/2dad5306-f2a8-4c3a-86dd-2161e8aacbe1" />
+
+
 ## About
 
 This project is intentionally written in **Objective-C** to demonstrate hands-on knowledge of the language, its idioms, and its integration with UIKit. It covers core concepts that are still relevant in large-scale iOS codebases maintained by companies like Meta, Google, Uber, and many others.
