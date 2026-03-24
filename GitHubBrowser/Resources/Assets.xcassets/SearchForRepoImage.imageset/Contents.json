@@ -1,11 +1,11 @@
 {
   "images" : [
     {
-      "filename" : "Search For Repo.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Search For Repo.png",
       "idiom" : "universal",
       "scale" : "2x"
     },

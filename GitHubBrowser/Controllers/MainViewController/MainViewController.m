@@ -22,8 +22,6 @@ static const struct {
     .padding = 16.0
 };
 
-static NSString * const kCellIdentifier = @"RepositoryCell";
-
 @interface MainViewController () <UISearchBarDelegate, UICollectionViewDataSource>
 
 @property (nonatomic, strong) UISearchBar *searchBar;
@@ -98,7 +96,7 @@ static NSString * const kCellIdentifier = @"RepositoryCell";
 - (UICollectionViewCompositionalLayout *)createLayout {
     NSCollectionLayoutSize *itemSize = [
         NSCollectionLayoutSize sizeWithWidthDimension:[NSCollectionLayoutDimension fractionalWidthDimension:1.0]
-            heightDimension:[NSCollectionLayoutDimension estimatedDimension:60]];
+            heightDimension:[NSCollectionLayoutDimension estimatedDimension:1000]];
     
     NSCollectionLayoutItem *item = [NSCollectionLayoutItem itemWithLayoutSize:itemSize];
     
@@ -152,7 +150,7 @@ static NSString * const kCellIdentifier = @"RepositoryCell";
     if (self.repositories.count > 0) {
         GHRepository *repo = self.repositories[indexPath.item];
         RepositoryCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[RepositoryCell cellIdentifier] forIndexPath:indexPath];
-        [cell configureWithName:repo.name];
+        [cell configureWithRepository:repo];
         return cell;
     }
     

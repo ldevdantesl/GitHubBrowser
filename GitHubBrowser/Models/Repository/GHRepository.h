@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "GHOwner.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -15,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *fullName;
 @property (nonatomic, copy) NSString *repoDescription;
 @property (nonatomic, assign) NSInteger stars;
+@property (nonatomic, strong) GHOwner *owner;
 
 - (instancetype)initWithDictionary:(NSDictionary *)dict;
 

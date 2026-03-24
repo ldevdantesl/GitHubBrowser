@@ -17,9 +17,11 @@
 static const struct {
     CGFloat imageSize;
     CGFloat spacing;
+    CGFloat bigSpacing;
 } Constants = {
-    .imageSize = 50.0,
-    .spacing = 10.0
+    .imageSize = 100.0,
+    .spacing = 10.0,
+    .bigSpacing = 20.0
 };
 
 @implementation NotFoundCell
@@ -38,6 +40,7 @@ static const struct {
         _label = [[UILabel alloc] init];
         _label.font = [UIFont systemFontOfSize: 16 weight: UIFontWeightBold];
         _label.textColor = [UIColor labelColor];
+        _label.textAlignment = NSTextAlignmentCenter;
     }
     return _label;
 }
@@ -71,17 +74,18 @@ static const struct {
 #pragma mark - PRIVATE FUNC
 - (void)setupUI {
     [self.contentView addSubview:self.imageView];
+    [self.contentView addSubview:self.label];
     [self.imageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.contentView.mas_top).offset(Constants.spacing);
-        make.left.right.equalTo(self.contentView).inset(Constants.spacing);
-        make.height.mas_equalTo(Constants.imageSize);
+        make.top.equalTo(self.contentView.mas_top).offset(Constants.bigSpacing);
+        make.centerX.equalTo(self.contentView.mas_centerX);
+        make.width.equalTo(self.contentView).multipliedBy(0.6);
+        make.height.equalTo(self.imageView.mas_width);
     }];
     
-    [self.contentView addSubview:self.label];
     [self.label mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.imageView.mas_bottom).offset(Constants.spacing);
+        make.top.equalTo(self.imageView.mas_bottom).offset(Constants.bigSpacing);
         make.left.right.equalTo(self.contentView).inset(Constants.spacing);
-        make.bottom.equalTo(self.contentView.mas_bottom).offset(-Constants.spacing);
+        make.bottom.equalTo(self.contentView.mas_bottom).offset(-Constants.bigSpacing);
     }];
 }
 
